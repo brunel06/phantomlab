@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHANTOM LAB — Contact</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #06080f; --surface: #0c0f1a; --surface2: #111520;
+    --border: rgba(255,255,255,0.06); --border-focus: rgba(167,139,250,0.4);
+    --ghost: #a78bfa; --ice: #e0f2fe; --text: #dde4f0; --muted: #5a6480;
+  }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100vh; display: flex; justify-content: center;
+    padding: 48px 16px; overflow-x: hidden;
+  }
+  body::before {
+    content: ''; position: fixed; top: -150px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse, rgba(167,139,250,0.08) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .page { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 1; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)} }
+
+  .back {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--muted); font-size: 13px; text-decoration: none;
+    transition: color 0.2s; width: fit-content;
+    animation: fadeUp 0.5s ease both;
+  }
+  .back:hover { color: var(--ghost); }
+
+  .header {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 22px; padding: 26px 24px; position: relative; overflow: hidden;
+    animation: fadeUp 0.5s ease 0.05s both;
+  }
+  .header::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--ghost), var(--ice), var(--ghost), transparent);
+    animation: shimmer 4s linear infinite; background-size: 200% 100%;
+  }
+  @keyframes shimmer { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
+
+  .header-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .mini-logo {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: linear-gradient(135deg, #6d28d9, #4c1d95);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .header-title { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+  .header-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .header-desc span { color: var(--ghost); }
+
+  .form-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 22px;
+    display: flex; flex-direction: column; gap: 15px;
+    animation: fadeUp 0.5s ease 0.1s both;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .label { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+  input, textarea {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 11px; padding: 12px 15px;
+    color: var(--text); font-family: 'Space Grotesk', sans-serif; font-size: 14px;
+    outline: none; transition: border-color 0.2s, box-shadow 0.2s; width: 100%; resize: none;
+  }
+  input::placeholder, textarea::placeholder { color: var(--muted); }
+  input:focus, textarea:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(167,139,250,0.08);
+  }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+  .chip {
+    padding: 6px 13px; border-radius: 100px;
+    border: 1px solid var(--border); background: var(--surface2);
+    font-size: 12px; color: var(--muted); cursor: pointer; transition: all 0.2s;
+    user-select: none;
+  }
+  .chip.active { border-color: var(--ghost); background: rgba(167,139,250,0.1); color: var(--ghost); }
+  .chip:hover:not(.active) { border-color: rgba(255,255,255,0.12); color: var(--text); }
+
+  /* ── SLIDER FIXES ── */
+  .budget-val {
+    font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700;
+    color: var(--ghost); text-shadow: 0 0 12px rgba(167,139,250,0.4);
+  }
+  .slider-wrap { position: relative; width: 100%; height: 20px; display: flex; align-items: center; }
+  .slider-track {
+    position: absolute; left: 0; right: 0; height: 3px;
+    background: var(--surface2); border-radius: 3px; overflow: hidden;
+  }
+  .slider-fill {
+    height: 100%; background: var(--ghost); border-radius: 3px;
+    width: 21%; transition: width 0.1s;
+  }
+  input[type="range"] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 20px; background: transparent;
+    cursor: pointer; position: relative; z-index: 2;
+    margin: 0; padding: 0; border: none; outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 18px; height: 18px;
+    border-radius: 50%; background: #fff;
+    box-shadow: 0 0 0 3px rgba(167,139,250,0.5), 0 2px 6px rgba(0,0,0,0.3);
+    cursor: pointer; transition: transform 0.15s;
+  }
+  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  input[type="range"]::-moz-range-thumb {
+    width: 18px; height: 18px; border-radius: 50%; background: #fff;
+    box-shadow: 0 0 0 3px rgba(167,139,250,0.5); cursor: pointer; border: none;
+  }
+  input[type="range"]:focus { box-shadow: none; border: none; }
+
+  .submit {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 16px; border-radius: 13px;
+    background: linear-gradient(135deg, #6d28d9, #4c1d95);
+    border: 1px solid rgba(167,139,250,0.3);
+    color: #fff; font-family: 'Rajdhani', sans-serif;
+    font-size: 15px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    cursor: pointer; transition: all 0.25s ease;
+    box-shadow: 0 4px 20px rgba(109,40,217,0.35); width: 100%;
+  }
+  .submit:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(109,40,217,0.5); }
+  .submit:active { transform: translateY(0); }
+
+  .error-msg {
+    font-size: 12px; color: #f87171; display: none; margin-top: -8px;
+  }
+
+  .divider { display: flex; align-items: center; gap: 10px; }
+  .divider-line { flex: 1; height: 1px; background: var(--border); }
+  .divider-text { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+  .quick { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; animation: fadeUp 0.5s ease 0.15s both; }
+  .qcard {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 15px; padding: 15px;
+    display: flex; flex-direction: column; gap: 5px;
+    text-decoration: none; color: var(--text); transition: all 0.2s;
+    cursor: pointer;
+  }
+  .qcard:hover { border-color: rgba(167,139,250,0.3); transform: translateY(-2px); }
+  .qcard-icon { font-size: 20px; }
+  .qcard-label { font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.5px; }
+  .qcard-val { font-size: 11px; color: var(--muted); }
+
+  .success {
+    display: none; flex-direction: column; align-items: center; gap: 14px;
+    padding: 36px 24px; text-align: center;
+    background: var(--surface); border: 1px solid rgba(167,139,250,0.2);
+    border-radius: 20px; animation: fadeUp 0.5s ease both;
+  }
+  .success-icon { font-size: 52px; }
+  .success-title { font-family: 'Rajdhani', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: 1px; color: #fff; }
+  .success-sub { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .success-sub strong { color: var(--ghost); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <a class="back" href="index.html">← Retour</a>
+
+  <div class="header">
+    <div class="header-top">
+      <div class="mini-logo">👻</div>
+      <div class="header-title">PHANTOM LAB</div>
+    </div>
+    <div class="header-desc">Décrivez votre projet et recevez une réponse sous <span>24h</span>. Premier échange offert.</div>
+  </div>
+
+  <div class="form-card" id="formCard">
+    <div class="row">
+      <div class="field"><div class="label">Prénom</div><input type="text" id="fname" placeholder="Jean"></div>
+      <div class="field"><div class="label">Nom</div><input type="text" id="lname" placeholder="Dupont"></div>
+    </div>
+
+    <div class="field">
+      <div class="label">Email *</div>
+      <input type="email" id="email" placeholder="jean@entreprise.fr">
+      <div class="error-msg" id="emailError">⚠️ Veuillez entrer votre email</div>
+    </div>
+
+    <div class="field">
+      <div class="label">Entreprise</div>
+      <input type="text" id="company" placeholder="Votre entreprise (optionnel)">
+    </div>
+
+    <div class="field">
+      <div class="label">Service(s) souhaité(s)</div>
+      <div class="chips">
+        <div class="chip active" onclick="this.classList.toggle('active')">⚡ Automatisation</div>
+        <div class="chip" onclick="this.classList.toggle('active')">🤖 Chatbot</div>
+        <div class="chip" onclick="this.classList.toggle('active')">✦ Agent IA</div>
+        <div class="chip" onclick="this.classList.toggle('active')">🎓 Formation</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="label" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Budget estimé</span>
+        <span class="budget-val" id="budgetVal">1 500 €</span>
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-track"><div class="slider-fill" id="sliderFill"></div></div>
+        <input type="range" id="budget" min="500" max="10000" step="500" value="1500"
+          oninput="updateBudget(this)">
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:2px">
+        <span>500 €</span><span>10 000 €+</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="label">Votre projet</div>
+      <textarea id="msg" rows="4" placeholder="Décrivez votre besoin en quelques lignes..."></textarea>
+    </div>
+
+    <button class="submit" onclick="submitForm()">👻 &nbsp; Envoyer ma demande</button>
+  </div>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-text">ou contactez directement</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="quick">
+    <a class="qcard" href="mailto:nexoraaiagence@gmail.com" target="_blank">
+      <div class="qcard-icon">✉️</div>
+      <div class="qcard-label">Email</div>
+      <div class="qcard-val">nexoraaiagence@gmail.com</div>
+    </a>
+    <a class="qcard" href="https://wa.me/22960161320" target="_blank">
+      <div class="qcard-icon">💬</div>
+      <div class="qcard-label">WhatsApp</div>
+      <div class="qcard-val">+229 60 16 13 20</div>
+    </a>
+  </div>
+
+  <div class="success" id="successCard">
+    <div class="success-icon">👻</div>
+    <div class="success-title">Message envoyé !</div>
+    <div class="success-sub">
+      Merci ! <strong>PHANTOM LAB</strong> vous répondra sous 24h avec une proposition sur mesure.
+    </div>
+    <a href="index.html" style="color:var(--ghost);font-size:13px;text-decoration:none;margin-top:4px">← Retour à l'accueil</a>
+  </div>
+
+</div>
+
+<script>
+  // ── EMAIL À METTRE À JOUR ──
+  const AGENCY_EMAIL = 'nexoraaiagence@gmail.com'; // Remplace par ton vrai email d'agence
+
+  // ── SLIDER ──
+  function updateBudget(input) {
+    const val = parseInt(input.value);
+    const min = parseInt(input.min);
+    const max = parseInt(input.max);
+    const pct = ((val - min) / (max - min)) * 100;
+    document.getElementById('sliderFill').style.width = pct + '%';
+    document.getElementById('budgetVal').textContent = val >= max ? '10 000 €+' : val.toLocaleString('fr-FR') + ' €';
+  }
+  // Init slider on load
+  updateBudget(document.getElementById('budget'));
+
+  // ── EMAIL COPY ──
+  function copyEmail() {
+    navigator.clipboard.writeText(AGENCY_EMAIL).then(() => {
+      document.getElementById('emailCopyVal').textContent = '✅ Copié !';
+      setTimeout(() => { document.getElementById('emailCopyVal').textContent = 'Appuyer pour copier'; }, 2000);
+    }).catch(() => {
+      // Fallback: ouvre mailto
+      window.location.href = 'mailto:' + AGENCY_EMAIL;
+    });
+  }
+
+  // ── SUBMIT ──
+  function submitForm() {
+    const email = document.getElementById('email').value.trim();
+    const errEl = document.getElementById('emailError');
+
+    if (!email) {
+      errEl.style.display = 'block';
+      document.getElementById('email').focus();
+      document.getElementById('email').style.borderColor = '#f87171';
+      setTimeout(() => {
+        errEl.style.display = 'none';
+        document.getElementById('email').style.borderColor = '';
+      }, 3000);
+      return;
+    }
+
+    // Construire le message WhatsApp avec les infos du formulaire
+    const fname = document.getElementById('fname').value || '';
+    const lname = document.getElementById('lname').value || '';
+    const company = document.getElementById('company').value || '';
+    const msg = document.getElementById('msg').value || '';
+    const budget = document.getElementById('budgetVal').textContent;
+
+    const chips = [...document.querySelectorAll('.chip.active')].map(c => c.textContent.trim()).join(', ');
+
+    const waMsg = encodeURIComponent(
+      `👻 Nouvelle demande PHANTOM LAB\n\n` +
+      `👤 Nom: ${fname} ${lname}\n` +
+      `📧 Email: ${email}\n` +
+      (company ? `🏢 Entreprise: ${company}\n` : '') +
+      `🛠 Services: ${chips || 'Non précisé'}\n` +
+      `💰 Budget: ${budget}\n` +
+      (msg ? `\n📝 Projet:\n${msg}` : '')
+    );
+
+    // Afficher le succès
+    document.getElementById('formCard').style.display = 'none';
+    const s = document.getElementById('successCard');
+    s.style.display = 'flex';
+
+    // Envoyer sur WhatsApp après 1 seconde
+    setTimeout(() => {
+      window.open('https://wa.me/22960161320?text=' + waMsg, '_blank');
+    }, 1000);
+  }
+</script>
+</body>
+</html>
