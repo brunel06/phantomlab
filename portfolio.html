@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHANTOM LAB — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #06080f;
+    --surface: #0c0f1a;
+    --surface2: #111520;
+    --border: rgba(255,255,255,0.06);
+    --ghost: #a78bfa;
+    --ghost2: #7c5cfc;
+    --ice: #e0f2fe;
+    --gold: #fbbf24;
+    --green: #34d399;
+    --text: #dde4f0;
+    --muted: #5a6480;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── AMBIENT ── */
+  .ambient {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  }
+  .ambient::before {
+    content: ''; position: absolute; top: -200px; left: 30%;
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(124,92,252,0.07) 0%, transparent 60%);
+  }
+  .ambient::after {
+    content: ''; position: absolute; bottom: -100px; right: -100px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(167,139,250,0.05) 0%, transparent 60%);
+  }
+
+  /* ── NOISE ── */
+  body::after {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 150px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 16px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(6,8,15,0.85); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  nav::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--ghost2), var(--ghost), transparent);
+    opacity: 0.4;
+  }
+  .nav-logo {
+    font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700;
+    letter-spacing: 2px; color: #fff; text-decoration: none;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nav-links { display: flex; align-items: center; gap: 28px; }
+  .nav-links a {
+    font-size: 13px; color: var(--muted); text-decoration: none;
+    transition: color 0.2s; letter-spacing: 0.5px;
+  }
+  .nav-links a:hover { color: var(--ghost); }
+  .nav-cta {
+    padding: 8px 20px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--ghost2), #4c1d95);
+    color: #fff !important; font-weight: 600 !important;
+    font-size: 13px !important;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 120px 40px 80px; text-align: center;
+    position: relative; z-index: 1;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.2);
+    border-radius: 100px; padding: 7px 20px; margin-bottom: 28px;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-badge::before {
+    content: ''; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s ease infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+  .hero-badge span { font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 700; color: var(--ghost); letter-spacing: 2px; text-transform: uppercase; }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(60px, 10vw, 120px);
+    line-height: 0.88; color: #fff; margin-bottom: 24px;
+    animation: fadeUp 0.8s ease 0.1s both;
+  }
+  .hero-title .accent {
+    background: linear-gradient(135deg, var(--ghost), var(--ice));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hero-sub {
+    font-size: 18px; color: var(--muted); line-height: 1.7;
+    max-width: 560px; margin: 0 auto 40px;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+  .hero-sub strong { color: var(--ghost); }
+
+  .hero-stats {
+    display: flex; gap: 40px; justify-content: center; flex-wrap: wrap;
+    animation: fadeUp 0.8s ease 0.3s both;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat-num {
+    font-family: 'Bebas Neue', sans-serif; font-size: 44px; line-height: 1;
+    color: var(--ghost); text-shadow: 0 0 20px rgba(167,139,250,0.4);
+  }
+  .hero-stat-label { font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
+
+  .scroll-hint {
+    position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: var(--muted); font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    animation: fadeUp 0.8s ease 0.5s both;
+  }
+  .scroll-hint::after {
+    content: ''; width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--ghost), transparent);
+    animation: scrollLine 2s ease infinite;
+  }
+  @keyframes scrollLine { 0%{opacity:0;transform:scaleY(0);transform-origin:top} 50%{opacity:1;transform:scaleY(1)} 100%{opacity:0;transform:scaleY(1);transform-origin:bottom} }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── SECTION ── */
+  section { padding: 80px 40px; position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; }
+
+  .section-label {
+    font-family: 'Rajdhani', sans-serif; font-size: 11px; font-weight: 700;
+    letter-spacing: 3px; text-transform: uppercase; color: var(--ghost);
+    margin-bottom: 12px; display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, var(--ghost2), transparent); max-width: 200px; }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 6vw, 72px); line-height: 0.92;
+    color: #fff; margin-bottom: 48px;
+  }
+
+  /* ── PROJECTS GRID ── */
+  .projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+
+  .project-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; overflow: hidden;
+    transition: all 0.3s ease; position: relative;
+    display: flex; flex-direction: column;
+  }
+  .project-card:hover {
+    border-color: rgba(167,139,250,0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(124,92,252,0.12);
+  }
+
+  .project-thumb {
+    height: 200px; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .project-thumb-icon { font-size: 64px; position: relative; z-index: 2; filter: drop-shadow(0 0 20px rgba(167,139,250,0.4)); }
+
+  /* Thumb variants */
+  .thumb-purple { background: linear-gradient(135deg, #1a0a3a, #2d1060); }
+  .thumb-dark { background: linear-gradient(135deg, #06080f, #0f1525); }
+  .thumb-green { background: linear-gradient(135deg, #022c1a, #064030); }
+  .thumb-gold { background: linear-gradient(135deg, #1a1000, #2c1f00); }
+  .thumb-blue { background: linear-gradient(135deg, #020c1e, #041830); }
+  .thumb-pink { background: linear-gradient(135deg, #1a0a1a, #300530); }
+
+  .thumb-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+  .thumb-glow {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at center, rgba(167,139,250,0.15) 0%, transparent 70%);
+  }
+
+  .project-tag {
+    position: absolute; top: 14px; left: 14px; z-index: 3;
+    padding: 4px 12px; border-radius: 100px;
+    font-family: 'Rajdhani', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .tag-live { background: rgba(52,211,153,0.15); border: 1px solid rgba(52,211,153,0.3); color: var(--green); }
+  .tag-fictif { background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.25); color: var(--ghost); }
+  .tag-real { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.25); color: var(--gold); }
+
+  .project-body { padding: 22px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+  .project-category { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+  .project-name { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
+  .project-desc { font-size: 13px; color: var(--muted); line-height: 1.6; flex: 1; }
+
+  .project-results {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;
+  }
+  .result-pill {
+    padding: 4px 10px; border-radius: 100px;
+    background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.15);
+    font-size: 11px; color: var(--green); font-weight: 500;
+  }
+
+  .project-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 22px; border-top: 1px solid var(--border);
+  }
+  .project-stack { display: flex; gap: 6px; }
+  .stack-chip {
+    padding: 3px 10px; border-radius: 6px;
+    background: var(--surface2); font-size: 11px; color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .project-link {
+    font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 700;
+    color: var(--ghost); text-decoration: none; letter-spacing: 1px;
+    text-transform: uppercase; display: flex; align-items: center; gap: 5px;
+    transition: gap 0.2s;
+  }
+  .project-link:hover { gap: 8px; }
+
+  /* ── FEATURED PROJECT ── */
+  .featured {
+    background: var(--surface); border: 1px solid rgba(167,139,250,0.2);
+    border-radius: 24px; overflow: hidden; margin-bottom: 20px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    transition: all 0.3s ease;
+  }
+  .featured:hover { box-shadow: 0 20px 60px rgba(124,92,252,0.15); }
+
+  .featured-visual {
+    background: linear-gradient(135deg, #0d0320, #1a0842);
+    display: flex; align-items: center; justify-content: center;
+    min-height: 300px; position: relative; overflow: hidden;
+  }
+  .featured-visual::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(167,139,250,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(167,139,250,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .featured-visual::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at center, rgba(124,92,252,0.2) 0%, transparent 70%);
+  }
+  .featured-icon { font-size: 100px; position: relative; z-index: 2; filter: drop-shadow(0 0 30px rgba(167,139,250,0.5)); }
+
+  .featured-content { padding: 40px; display: flex; flex-direction: column; justify-content: center; gap: 16px; }
+  .featured-badge {
+    display: inline-flex; align-items: center; gap: 6px; width: fit-content;
+    background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.25);
+    border-radius: 100px; padding: 4px 14px;
+    font-size: 11px; font-weight: 600; color: var(--green);
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .featured-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .featured-title { font-family: 'Bebas Neue', sans-serif; font-size: 42px; line-height: 0.95; color: #fff; }
+  .featured-title span { color: var(--ghost); }
+  .featured-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+  .featured-stats { display: flex; gap: 20px; }
+  .featured-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--ghost); }
+  .featured-stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .featured-btn {
+    display: inline-flex; align-items: center; gap: 8px; width: fit-content;
+    padding: 12px 24px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--ghost2), #4c1d95);
+    color: #fff; text-decoration: none;
+    font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    transition: all 0.2s; box-shadow: 0 4px 20px rgba(124,92,252,0.3);
+  }
+  .featured-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(124,92,252,0.5); }
+
+  /* ── SERVICES ── */
+  .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+  .service-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px;
+    transition: all 0.25s ease; position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(124,92,252,0.08), transparent);
+    opacity: 0; transition: opacity 0.25s;
+  }
+  .service-card:hover { border-color: rgba(167,139,250,0.3); transform: translateY(-2px); }
+  .service-card:hover::before { opacity: 1; }
+  .service-icon { font-size: 32px; margin-bottom: 14px; }
+  .service-name { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 8px; letter-spacing: 0.5px; }
+  .service-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .service-price { margin-top: 14px; font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: var(--ghost); }
+
+  /* ── TEAM ── */
+  .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+  .team-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 18px; padding: 28px 20px; text-align: center;
+    transition: all 0.25s ease;
+  }
+  .team-card:hover { border-color: rgba(167,139,250,0.3); transform: translateY(-3px); }
+  .team-avatar {
+    width: 64px; height: 64px; border-radius: 18px; margin: 0 auto 14px;
+    display: flex; align-items: center; justify-content: center; font-size: 28px;
+    background: linear-gradient(135deg, var(--ghost2), #4c1d95);
+    box-shadow: 0 0 20px rgba(124,92,252,0.3);
+  }
+  .team-name { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .team-role { font-size: 12px; color: var(--ghost); letter-spacing: 0.5px; margin-bottom: 10px; }
+  .team-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* ── CTA SECTION ── */
+  .cta-section {
+    margin: 0 40px 80px; padding: 60px;
+    background: var(--surface); border: 1px solid rgba(167,139,250,0.2);
+    border-radius: 24px; text-align: center; position: relative; overflow: hidden;
+    z-index: 1;
+  }
+  .cta-section::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(124,92,252,0.12) 0%, transparent 65%);
+  }
+  .cta-section::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--ghost2), var(--ghost), var(--ice), var(--ghost), var(--ghost2), transparent);
+  }
+  .cta-ghost { font-size: 64px; margin-bottom: 16px; position: relative; z-index: 1; display: block; }
+  .cta-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(40px, 6vw, 72px); line-height: 0.92; color: #fff; margin-bottom: 16px; position: relative; z-index: 1; }
+  .cta-title span { color: var(--ghost); text-shadow: 0 0 30px rgba(167,139,250,0.4); }
+  .cta-sub { font-size: 16px; color: var(--muted); margin-bottom: 32px; position: relative; z-index: 1; }
+  .cta-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
+  .cta-btn-primary {
+    padding: 16px 32px; border-radius: 14px;
+    background: linear-gradient(135deg, var(--ghost2), #4c1d95);
+    color: #fff; text-decoration: none;
+    font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    box-shadow: 0 4px 24px rgba(124,92,252,0.4); transition: all 0.25s;
+  }
+  .cta-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 36px rgba(124,92,252,0.6); }
+  .cta-btn-secondary {
+    padding: 16px 32px; border-radius: 14px;
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text); text-decoration: none;
+    font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; transition: all 0.25s;
+  }
+  .cta-btn-secondary:hover { border-color: rgba(167,139,250,0.3); color: var(--ghost); transform: translateY(-2px); }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border); padding: 24px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: relative; z-index: 1;
+  }
+  footer::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--ghost2), transparent);
+    opacity: 0.4;
+  }
+  .footer-brand { font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700; color: var(--ghost); letter-spacing: 2px; }
+  .footer-copy { font-size: 12px; color: var(--muted); }
+
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 100px 20px 60px; }
+    section { padding: 60px 20px; }
+    .featured { grid-template-columns: 1fr; }
+    .featured-visual { min-height: 200px; }
+    .cta-section { margin: 0 20px 60px; padding: 40px 24px; }
+    footer { flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">👻 PHANTOM LAB</a>
+  <div class="nav-links">
+    <a href="#projets">Projets</a>
+    <a href="#services">Services</a>
+    <a href="#equipe">Équipe</a>
+    <a href="phantom-lab-contact.html" class="nav-cta">Nous contacter</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge"><span>Portfolio PHANTOM LAB — 2026</span></div>
+  <h1 class="hero-title">
+    NOS <span class="accent">RÉALISATIONS</span><br>
+    EN AGENTS IA
+  </h1>
+  <p class="hero-sub">
+    Des solutions IA concrètes livrées à des entreprises réelles.
+    <strong>Automatisation, chatbots, agents sur mesure</strong> — voici ce qu'on construit.
+  </p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-num">12+</div>
+      <div class="hero-stat-label">Projets livrés</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">8+</div>
+      <div class="hero-stat-label">Clients satisfaits</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">24/7</div>
+      <div class="hero-stat-label">Agents actifs</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">4.9★</div>
+      <div class="hero-stat-label">Satisfaction</div>
+    </div>
+  </div>
+  <div class="scroll-hint">Découvrir</div>
+</div>
+
+<!-- PROJETS -->
+<section id="projets">
+  <div class="section-label">Nos réalisations</div>
+  <h2 class="section-title">PROJETS<br>RÉCENTS</h2>
+
+  <!-- FEATURED — Chatbot PHANTOM LAB -->
+  <div class="featured">
+    <div class="featured-visual">
+      <div class="featured-icon">🤖</div>
+    </div>
+    <div class="featured-content">
+      <div class="featured-badge">Projet live</div>
+      <div class="featured-title">PHANTOM LAB<br><span>AI ASSISTANT</span></div>
+      <p class="featured-desc">Agent IA de recommandation de services pour PHANTOM LAB. Analyse le besoin du client en temps réel et recommande la solution IA adaptée. Disponible 24h/24 sans intervention humaine.</p>
+      <div class="featured-stats">
+        <div>
+          <div class="featured-stat-num">24/7</div>
+          <div class="featured-stat-label">Disponibilité</div>
+        </div>
+        <div>
+          <div class="featured-stat-num">~2s</div>
+          <div class="featured-stat-label">Temps de réponse</div>
+        </div>
+        <div>
+          <div class="featured-stat-num">100%</div>
+          <div class="featured-stat-label">Automatisé</div>
+        </div>
+      </div>
+      <a class="featured-btn" href="phantom-lab-chatbot.html" target="_blank">👻 Tester la démo</a>
+    </div>
+  </div>
+
+  <!-- PROJECTS GRID -->
+  <div class="projects">
+
+    <!-- Projet 1 -->
+    <div class="project-card">
+      <div class="project-thumb thumb-purple">
+        <div class="thumb-grid"></div>
+        <div class="thumb-glow"></div>
+        <div class="project-thumb-icon">🛒</div>
+        <div class="project-tag tag-fictif">Projet type</div>
+      </div>
+      <div class="project-body">
+        <div class="project-category">E-commerce · Chatbot</div>
+        <div class="project-name">Assistant Service Client E-commerce</div>
+        <p class="project-desc">Chatbot IA intégré sur WhatsApp pour une boutique en ligne. Répond aux questions sur les commandes, délais de livraison et produits automatiquement.</p>
+        <div class="project-results">
+          <div class="result-pill">-80% messages manuels</div>
+          <div class="result-pill">Réponse instantanée</div>
+        </div>
+      </div>
+      <div class="project-footer">
+        <div class="project-stack">
+          <div class="stack-chip">Botpress</div>
+          <div class="stack-chip">WhatsApp</div>
+        </div>
+        <a class="project-link" href="phantom-lab-contact.html">Similaire →</a>
+      </div>
+    </div>
+
+    <!-- Projet 2 -->
+    <div class="project-card">
+      <div class="project-thumb thumb-green">
+        <div class="thumb-grid"></div>
+        <div class="thumb-glow" style="background:radial-gradient(circle at center,rgba(52,211,153,0.15) 0%,transparent 70%)"></div>
+        <div class="project-thumb-icon">🏨</div>
+        <div class="project-tag tag-fictif">Projet type</div>
+      </div>
+      <div class="project-body">
+        <div class="project-category">Hôtellerie · Automatisation</div>
+        <div class="project-name">Agent de Réservation Hôtel</div>
+        <p class="project-desc">Agent IA qui gère les demandes de réservation 24h/24, vérifie les disponibilités et confirme automatiquement les bookings par email et WhatsApp.</p>
+        <div class="project-results">
+          <div class="result-pill">+40% réservations</div>
+          <div class="result-pill">0 appel manqué</div>
+        </div>
+      </div>
+      <div class="project-footer">
+        <div class="project-stack">
+          <div class="stack-chip">Make.com</div>
+          <div class="stack-chip">Botpress</div>
+        </div>
+        <a class="project-link" href="phantom-lab-contact.html">Similaire →</a>
+      </div>
+    </div>
+
+    <!-- Projet 3 -->
+    <div class="project-card">
+      <div class="project-thumb thumb-gold">
+        <div class="thumb-grid"></div>
+        <div class="thumb-glow" style="background:radial-gradient(circle at center,rgba(251,191,36,0.12) 0%,transparent 70%)"></div>
+        <div class="project-thumb-icon">💼</div>
+        <div class="project-tag tag-fictif">Projet type</div>
+      </div>
+      <div class="project-body">
+        <div class="project-category">Coach / Formateur · Automatisation</div>
+        <div class="project-name">Système de Qualification de Leads</div>
+        <p class="project-desc">Workflow automatisé qui qualifie les prospects entrants, pose les bonnes questions et les dirige vers le bon service — sans intervention humaine.</p>
+        <div class="project-results">
+          <div class="result-pill">3x plus de leads qualifiés</div>
+          <div class="result-pill">-5h/semaine</div>
+        </div>
+      </div>
+      <div class="project-footer">
+        <div class="project-stack">
+          <div class="stack-chip">Make.com</div>
+          <div class="stack-chip">Gmail</div>
+        </div>
+        <a class="project-link" href="phantom-lab-contact.html">Similaire →</a>
+      </div>
+    </div>
+
+    <!-- Projet 4 -->
+    <div class="project-card">
+      <div class="project-thumb thumb-blue">
+        <div class="thumb-grid"></div>
+        <div class="thumb-glow" style="background:radial-gradient(circle at center,rgba(96,165,250,0.12) 0%,transparent 70%)"></div>
+        <div class="project-thumb-icon">🏥</div>
+        <div class="project-tag tag-fictif">Projet type</div>
+      </div>
+      <div class="project-body">
+        <div class="project-category">Santé · Chatbot IA</div>
+        <div class="project-name">Assistant Prise de Rendez-vous Médical</div>
+        <p class="project-desc">Chatbot IA qui gère la prise de rendez-vous pour une clinique, envoie des rappels automatiques et répond aux questions fréquentes des patients.</p>
+        <div class="project-results">
+          <div class="result-pill">-60% appels entrants</div>
+          <div class="result-pill">Rappels auto</div>
+        </div>
+      </div>
+      <div class="project-footer">
+        <div class="project-stack">
+          <div class="stack-chip">Botpress</div>
+          <div class="stack-chip">Zapier</div>
+        </div>
+        <a class="project-link" href="phantom-lab-contact.html">Similaire →</a>
+      </div>
+    </div>
+
+    <!-- Projet 5 -->
+    <div class="project-card">
+      <div class="project-thumb thumb-pink">
+        <div class="thumb-grid"></div>
+        <div class="thumb-glow" style="background:radial-gradient(circle at center,rgba(244,114,182,0.12) 0%,transparent 70%)"></div>
+        <div class="project-thumb-icon">📱</div>
+        <div class="project-tag tag-real">Réel</div>
+      </div>
+      <div class="project-body">
+        <div class="project-category">Agence IA · Site Web</div>
+        <div class="project-name">Site Web PHANTOM LAB</div>
+        <p class="project-desc">Site web complet avec page d'accueil, page de contact avec formulaire intelligent et intégration WhatsApp, et démo chatbot IA live.</p>
+        <div class="project-results">
+          <div class="result-pill">100% no-code</div>
+          <div class="result-pill">0€ de budget</div>
+        </div>
+      </div>
+      <div class="project-footer">
+        <div class="project-stack">
+          <div class="stack-chip">GitHub</div>
+          <div class="stack-chip">HTML/CSS</div>
+        </div>
+        <a class="project-link" href="index.html">Voir →</a>
+      </div>
+    </div>
+
+    <!-- Projet 6 -->
+    <div class="project-card">
+      <div class="project-thumb thumb-purple">
+        <div class="thumb-grid"></div>
+        <div class="thumb-glow"></div>
+        <div class="project-thumb-icon">⚡</div>
+        <div class="project-tag tag-fictif">Projet type</div>
+      </div>
+      <div class="project-body">
+        <div class="project-category">Restaurant · Automatisation</div>
+        <div class="project-name">Agent de Gestion des Commandes</div>
+        <p class="project-desc">Agent IA connecté à WhatsApp qui prend les commandes, les envoie en cuisine et notifie le client quand sa commande est prête — sans personnel dédié.</p>
+        <div class="project-results">
+          <div class="result-pill">Commandes 24/7</div>
+          <div class="result-pill">0 erreur de commande</div>
+        </div>
+      </div>
+      <div class="project-footer">
+        <div class="project-stack">
+          <div class="stack-chip">Botpress</div>
+          <div class="stack-chip">Make.com</div>
+        </div>
+        <a class="project-link" href="phantom-lab-contact.html">Similaire →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-label">Ce qu'on propose</div>
+  <h2 class="section-title">NOS<br>SERVICES</h2>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">⚡</div>
+      <div class="service-name">Automatisation de tâches</div>
+      <p class="service-desc">Workflows intelligents qui éliminent les tâches répétitives. Gagne 10h+ par semaine.</p>
+      <div class="service-price">Sur devis</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🤖</div>
+      <div class="service-name">Chatbots & Assistants IA</div>
+      <p class="service-desc">Agents conversationnels disponibles 24h/24 sur WhatsApp, site web ou Instagram.</p>
+      <div class="service-price">Sur devis</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">✦</div>
+      <div class="service-name">Agents IA sur mesure</div>
+      <p class="service-desc">Solutions IA personnalisées pour ton secteur et tes processus spécifiques.</p>
+      <div class="service-price">Sur devis</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🎓</div>
+      <div class="service-name">Formation IA</div>
+      <p class="service-desc">Apprends à créer et vendre des agents IA. Deviens indépendant financièrement.</p>
+      <div class="service-price">Sur devis</div>
+    </div>
+  </div>
+</section>
+
+<!-- ÉQUIPE -->
+<section id="equipe">
+  <div class="section-label">Les personnes derrière</div>
+  <h2 class="section-title">NOTRE<br>ÉQUIPE</h2>
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="team-avatar">👻</div>
+      <div class="team-name">Hélios</div>
+      <div class="team-role">CEO & Fondateur</div>
+      <p class="team-desc">Vision stratégique, relations clients et direction de l'agence.</p>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">📱</div>
+      <div class="team-name">Carine</div>
+      <div class="team-role">Community Manager</div>
+      <p class="team-desc">Gestion des réseaux sociaux, contenu et présence digitale.</p>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">🤖</div>
+      <div class="team-name">Caleb</div>
+      <div class="team-role">Concepteur Agents IA</div>
+      <p class="team-desc">Création et déploiement des agents IA pour les clients.</p>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">⚡</div>
+      <div class="team-name">Maguy</div>
+      <div class="team-role">Conceptrice Agents IA</div>
+      <p class="team-desc">Automatisations, workflows et support client après livraison.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <span class="cta-ghost">👻</span>
+  <h2 class="cta-title">TON PROJET<br><span>COMMENCE ICI</span></h2>
+  <p class="cta-sub">Premier échange gratuit — on analyse ton besoin et on te propose une solution IA sur mesure.</p>
+  <div class="cta-buttons">
+    <a href="phantom-lab-contact.html" class="cta-btn-primary">👻 Démarrer un projet</a>
+    <a href="phantom-lab-chatbot.html" class="cta-btn-secondary">🤖 Tester la démo IA</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">👻 PHANTOM LAB</div>
+  <div class="footer-copy">© 2026 PHANTOM LAB · Agence d'Agents IA · Cotonou, Bénin</div>
+</footer>
+
+</body>
+</html>
